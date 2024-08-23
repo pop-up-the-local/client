@@ -42,10 +42,10 @@ class _MyAppState extends State<MyApp> {
     PopUpListScreen(),
     //ApplicationScreen(),
     //ImageUploadScreen(),
-    //MyPageScreen(),
+    MyPageScreen(),
     //SignUpBusinessScreen(),
     //SignUpCustomerScreen(),
-    BookmarkScreen(),
+    //BookmarkScreen(),
   ];
 
   void _onBottomNavTapped(int index) {

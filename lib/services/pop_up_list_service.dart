@@ -10,7 +10,7 @@ class PopUpListService {
   Future<dynamic> fetchPopUps(String? category, String? city) async {
     var url = '$apiUrl/api/popups/list';
 
-    if (category != null) {
+    if (category != '전체' && category != null) {
       switch (category) {
         case '요식':
           category = 'FOOD';
@@ -26,11 +26,17 @@ class PopUpListService {
           break;
       }
       url += '?category=$category';
-    }
-    if (city != null) {
-      url += '?city=$city';
+
+      if (city != '전체' && city != null) {
+        url += '&city=$city';
+      }
+    } else {
+      if (city != '전체' && city != null) {
+        url += '?city=$city';
+      }
     }
 
+    print(url);
     try {
       var response = await http.get(Uri.parse(url));
       if (response.statusCode == 200) {

@@ -15,22 +15,7 @@ class _PopUpListScreenState extends State<PopUpListScreen> {
   String _selectedIndustry = '전체';
   List<dynamic> _popupList = [];
 
-  List<dynamic> popUps = [];
   final PopUpListService _popUpListService = PopUpListService();
-
-  @override
-  void initState() {
-    super.initState();
-    _fetchPopUps();
-  }
-
-  void _fetchPopUps() async {
-    var fetchedPopUps = await _popUpListService.fetchPopUps(null, null);
-    setState(() {
-      popUps = fetchedPopUps;
-    });
-  }
-
   final List<String> _industries = <String>[
     '전체',
     '요식',
@@ -60,6 +45,21 @@ class _PopUpListScreenState extends State<PopUpListScreen> {
   ];
 
   @override
+  void initState() {
+    super.initState();
+    _fetchPopUps(_selectedIndustry, _selectedLocation);
+  }
+
+  void _fetchPopUps(String industry, String location) async {
+    var fetchedPopUps = await _popUpListService.fetchPopUps(industry, location);
+    setState(() {
+      _popupList = fetchedPopUps;
+      _buildPopUpList();
+      print(_popupList);
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -72,25 +72,21 @@ class _PopUpListScreenState extends State<PopUpListScreen> {
             children: [
               CustomDropdownWidget(
                 categories: _industries,
-                onChanged: (String? newValue) async {
-                  final popupList = await _popUpListService.fetchPopUps(
-                      _selectedLocation, newValue!);
-                  setState(() {
+                onChanged: (String? newValue) {
+                  if (newValue != null && newValue != _selectedIndustry) {
                     _selectedIndustry = newValue;
-                    _popupList = popupList;
-                  });
+                    _fetchPopUps(newValue, _selectedLocation);
+                  }
                 },
                 dropdownValue: _selectedIndustry,
               ),
               CustomDropdownWidget(
                 categories: _locations,
-                onChanged: (String? newValue) async {
-                  setState(() {
-                    _selectedLocation = newValue!;
-                    _popUpListService
-                        .fetchPopUps(newValue, _selectedLocation)
-                        .then((value) => setState(() {}));
-                  });
+                onChanged: (String? newValue) {
+                  if (newValue != null && newValue != _selectedLocation) {
+                    _selectedLocation = newValue;
+                    _fetchPopUps(_selectedIndustry, newValue);
+                  }
                 },
                 dropdownValue: _selectedLocation,
               ),
@@ -105,48 +101,19 @@ class _PopUpListScreenState extends State<PopUpListScreen> {
   }
 
   Widget _buildPopUpList() {
-    return SizedBox(
-      height: 240,
-      child: ListView.builder(
-        scrollDirection: Axis.vertical,
-        itemCount: popUps.length,
-        itemBuilder: (context, index) {
-          var popup = popUps[index];
-          return Column(
-            children: [
-              InkWell(
-                // 팝업 클릭 시 이동
-                onTap: () {},
-                child: Column(
-                  children: [
-                    Container(
-                        width: 140,
-                        height: 160,
-                        margin: const EdgeInsets.all(10),
-                        decoration: BoxDecoration(
-                          color: ColorTheme.background,
-                          borderRadius: BorderRadius.circular(20),
-                          image: DecorationImage(
-                            image: NetworkImage(popup.image), // 팝업 대표 이미지
-                            //image: AssetImage('assets/img/couple_date.png'),
-                            fit: BoxFit.cover,
-                          ),
-                        )),
-                    Text(
-                      popup.title,
-                      // '대구 수성구',
-                      style: Theme.of(context).textTheme.titleMedium, // 팝업 위치
-                    ),
-                    Text(popup.address,
-                        // '말이 많다',
-                        style: Theme.of(context).textTheme.titleSmall), // 팝업 이름
-                  ],
-                ),
-              ),
-            ],
-          );
-        },
-      ),
+    return ListView.builder(
+      itemCount: _popupList.length,
+      itemBuilder: (context, index) {
+        var popup = _popupList[index];
+        return ListTile(
+          title: Text(popup.title),
+          subtitle: Text(popup.address),
+          leading: Image.network(popup.image, fit: BoxFit.cover),
+          onTap: () {
+            // 터치 이벤트 처리, 예: 팝업 상세 페이지로 이동
+          },
+        );
+      },
     );
   }
 }

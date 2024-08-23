@@ -63,6 +63,14 @@ class _ApplicationScreenState extends State<ApplicationScreen> {
     super.dispose();
   }
 
+  final List<String> _industries = <String>[
+    '전체',
+    '요식',
+    '제조',
+    '예술',
+    '교육',
+  ];
+
   final List<String> _locations = <String>[
     '전체',
     '서울',
@@ -113,6 +121,44 @@ class _ApplicationScreenState extends State<ApplicationScreen> {
     }
   }
 
+  Future<void> _submitData() async {
+    var uri = Uri.parse('YOUR_BACKEND_URL'); // 서버 URL 변경 필요
+    var request = http.MultipartRequest('POST', uri);
+
+    // 기타 정보 추가
+    request.fields['storeName'] = _storeNameController.text;
+    request.fields['description'] = _descriptionController.text;
+    request.fields['location'] = _selectedLocation;
+    request.fields['industry'] = _selectedIndustry;
+    request.fields['startDate'] =
+        _selectedDay.toString().substring(0, 10); // 예: 2023-01-01 형식으로 변경 필요
+
+    // 이미지 파일 추가
+    if (_selectedImages != null) {
+      for (var image in _selectedImages!) {
+        var multipartFile = await http.MultipartFile.fromPath(
+          'images', // 백엔드에서 기대하는 필드 이름
+          image.path,
+        );
+        request.files.add(multipartFile);
+      }
+    }
+
+    print(request.fields);
+
+    // 서버 요청 및 응답 처리
+    var response = await request.send();
+    if (response.statusCode == 200) {
+      print('Submitted successfully!');
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text('제출 성공!')));
+    } else {
+      print('Submit failed!');
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text('제출 실패!')));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -153,26 +199,26 @@ class _ApplicationScreenState extends State<ApplicationScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       CustomDropdownWhiteWidget(
-                        title: '장소',
-                        categories: _locations,
-                        selectedValue: _selectedLocation,
+                        title: '업종',
+                        categories: _industries,
+                        selectedValue: _selectedIndustry,
                         onChanged: (String? newValue) {
                           print(newValue);
                           setState(() {
-                            _selectedLocation = newValue!;
+                            _selectedIndustry = newValue!;
                             _updateProgress();
                           });
                         },
                       ),
                       CustomDropdownWhiteWidget(
-                        title: '업종',
+                        title: '장소',
                         categories: _locations,
-                        selectedValue: _selectedIndustry,
+                        selectedValue: _selectedLocation,
                         onChanged: (String? newValue) {
                           print(newValue);
 
                           setState(() {
-                            _selectedIndustry = newValue!;
+                            _selectedLocation = newValue!;
                             _updateProgress();
                           });
                         },
@@ -213,13 +259,13 @@ class _ApplicationScreenState extends State<ApplicationScreen> {
                     onPressed: _uploadImages,
                     child: const Text('사진 업로드'),
                   ),
-                  const Text('시간을 선택해주세요'),
+                  ElevatedButton(
+                    onPressed: () => _submitData(),
+                    child: const Text('제출하기'),
+                  ),
                   const SizedBox(height: 20),
-                  const Text('시간을 선택해주세요'),
                   const SizedBox(height: 20),
-                  const Text('시간을 선택해주세요'),
                   const SizedBox(height: 20),
-                  const Text('시간을 선택해주세요'),
                 ],
               ),
             ),
