@@ -3,7 +3,7 @@ import 'package:pop_up_the_local/services/bookmark_service.dart';
 import 'package:pop_up_the_local/style/theme.dart';
 
 class BookmarkScreen extends StatefulWidget {
-  BookmarkScreen({super.key});
+  const BookmarkScreen({super.key});
 
   @override
   State<BookmarkScreen> createState() => _BookmarkScreenState();

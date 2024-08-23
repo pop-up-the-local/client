@@ -7,6 +7,7 @@ import 'package:pop_up_the_local/screens/pop_up_detailed_screen.dart';
 import 'package:pop_up_the_local/screens/pop_up_list_screen.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:pop_up_the_local/screens/sign_up_customer_screen.dart';
+import 'screens/boomark_screen.dart';
 import 'screens/sign_up_business_screen.dart';
 
 import 'screens/image_upload_screen.dart';
@@ -37,13 +38,14 @@ class _MyAppState extends State<MyApp> {
 
   static const List<Widget> _screenList = [
     HomeScreen(),
-    //PopUpDetailedScreen(),
-    //PopUpListScreen(),
+    PopUpDetailedScreen(),
+    PopUpListScreen(),
     //ApplicationScreen(),
     //ImageUploadScreen(),
     //MyPageScreen(),
-    SignUpBusinessScreen(),
-    SignUpCustomerScreen(),
+    //SignUpBusinessScreen(),
+    //SignUpCustomerScreen(),
+    //BookmarkScreen(),
   ];
 
   void _onBottomNavTapped(int index) {

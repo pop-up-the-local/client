@@ -20,6 +20,18 @@ class _PopUpDetailedScreenState extends State<PopUpDetailedScreen> {
     });
   }
 
+  void _toggleBookmark() {
+    setState(() {
+      _isBookmarked = !_isBookmarked;
+    });
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(_isBookmarked ? '북마크 설정됨' : '북마크 해제됨'),
+        duration: const Duration(milliseconds: 200),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -77,10 +89,7 @@ class _PopUpDetailedScreenState extends State<PopUpDetailedScreen> {
                                 ),
                               ),
                               IconButton(
-                                onPressed: () {
-                                  _isBookmarked = !_isBookmarked;
-                                  setState(() {});
-                                },
+                                onPressed: _toggleBookmark,
                                 icon: Icon(
                                   _isBookmarked
                                       ? Icons.bookmark
