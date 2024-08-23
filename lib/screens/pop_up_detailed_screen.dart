@@ -25,7 +25,7 @@ class _PopUpDetailedScreenState extends State<PopUpDetailedScreen> {
     _fetchPopUp();
   }
 
-  Future<void> _fetchPopUp() async {
+  void _fetchPopUp() async {
     var fetchedPopUp = await getPopupDetail(widget.popupId);
     setState(() {
       popUp = fetchedPopUp;
@@ -53,7 +53,6 @@ class _PopUpDetailedScreenState extends State<PopUpDetailedScreen> {
 
   @override
   Widget build(BuildContext context) {
-    images = popUp['images'];
     return Scaffold(
       // 팝업 상세 페이지
       body: Stack(
@@ -62,13 +61,14 @@ class _PopUpDetailedScreenState extends State<PopUpDetailedScreen> {
           SingleChildScrollView(
             child: Column(
               children: [
-                Container(
-                  height: 243,
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                        image: NetworkImage(images[0]), fit: BoxFit.cover),
+                if (images.isNotEmpty)
+                  Container(
+                    height: 243,
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                          image: NetworkImage(images[0]), fit: BoxFit.cover),
+                    ),
                   ),
-                ),
                 // 팝업 상세 정보
                 Container(
                   padding: const EdgeInsets.all(20),

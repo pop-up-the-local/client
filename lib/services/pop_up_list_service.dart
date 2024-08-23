@@ -35,7 +35,6 @@ class PopUpListService {
       var response = await http.get(Uri.parse(url));
       if (response.statusCode == 200) {
         final data = jsonDecode(utf8.decode(response.bodyBytes))['data'];
-        print(data);
         return data.map((e) => PopUpModel.fromJson(e)).toList();
       } else {
         print('Failed to load popups from the server');
