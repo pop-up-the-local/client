@@ -1,12 +1,17 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:pop_up_the_local/widgets/custom_progress_ring_widget.dart';
 import 'package:pop_up_the_local/widgets/custom_dropdown_white_widget.dart';
 import 'package:pop_up_the_local/widgets/custom_dropdown_widget.dart';
 import 'package:pop_up_the_local/widgets/text_input_widget.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:http/http.dart' as http;
 
+import '../services/image_service.dart';
 import '../style/theme.dart';
 
 class ApplicationScreen extends StatefulWidget {
@@ -79,6 +84,35 @@ class _ApplicationScreenState extends State<ApplicationScreen> {
     '제주도'
   ];
 
+  List<XFile>? _selectedImages;
+
+  void _pickImages() async {
+    var images = await ImagePickerService().pickImage();
+    setState(() {
+      _selectedImages = images;
+    });
+  }
+
+  Future<void> _uploadImages() async {
+    var uri = Uri.parse('YOUR_BACKEND_URL'); // 서버 URL
+    var request = http.MultipartRequest('POST', uri);
+
+    for (var image in _selectedImages!) {
+      var multipartFile = await http.MultipartFile.fromPath(
+        'picture', // 백엔드에서 기대하는 필드 이름
+        image.path,
+      );
+      request.files.add(multipartFile);
+    }
+
+    var response = await request.send();
+    if (response.statusCode == 200) {
+      print('Uploaded successfully!');
+    } else {
+      print('Upload failed!');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -123,6 +157,7 @@ class _ApplicationScreenState extends State<ApplicationScreen> {
                         categories: _locations,
                         selectedValue: _selectedLocation,
                         onChanged: (String? newValue) {
+                          print(newValue);
                           setState(() {
                             _selectedLocation = newValue!;
                             _updateProgress();
@@ -134,6 +169,8 @@ class _ApplicationScreenState extends State<ApplicationScreen> {
                         categories: _locations,
                         selectedValue: _selectedIndustry,
                         onChanged: (String? newValue) {
+                          print(newValue);
+
                           setState(() {
                             _selectedIndustry = newValue!;
                             _updateProgress();
@@ -159,8 +196,23 @@ class _ApplicationScreenState extends State<ApplicationScreen> {
                   const SizedBox(height: 20),
                   buildCalendar(),
                   const SizedBox(height: 20),
-                  const Text('시간을 선택해주세요'),
+
+                  ElevatedButton(
+                    onPressed: _pickImages,
+                    child: const Text('사진 선택'),
+                  ),
+                  if (_selectedImages != null)
+                    Wrap(
+                      children: _selectedImages!.map((file) {
+                        return Image.file(File(file.path),
+                            width: 100, height: 100);
+                      }).toList(),
+                    ),
                   const SizedBox(height: 20),
+                  ElevatedButton(
+                    onPressed: _uploadImages,
+                    child: const Text('사진 업로드'),
+                  ),
                   const Text('시간을 선택해주세요'),
                   const SizedBox(height: 20),
                   const Text('시간을 선택해주세요'),
@@ -192,6 +244,9 @@ class _ApplicationScreenState extends State<ApplicationScreen> {
         },
         onDaySelected: (selectedDay, focusedDay) {
           // 선택한 날짜를 저장하고 화면을 갱신합니다.
+          // selectedDay를 yyyy-MM-dd 형태로 출력
+          print(selectedDay.toString().substring(0, 10));
+
           setState(() {
             _selectedDay = selectedDay;
             _focusedDay = focusedDay; // update `_focusedDay` here as well

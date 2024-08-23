@@ -10,6 +10,7 @@ Future<List<dynamic>> getBookmarkList(String memberId) async {
   final response = await http.get(Uri.parse('$baseUrl/api/bookmarks'));
   if (response.statusCode == 200) {
     final data = jsonDecode(utf8.decode(response.bodyBytes))['data'];
+    print(data);
     return data.map((e) => BookmarkModel.fromJson(e)).toList();
   } else {
     throw Exception('Failed to load bookmark list');

@@ -21,7 +21,7 @@ class _BookmarkScreenState extends State<BookmarkScreen> {
         body: Container(
             color: Colors.white,
             child: FutureBuilder(
-                future: getBookmarkList("66c4403a3e0e4edeae03270a"),
+                future: getBookmarkList("66c68f2bfdd2695f92702262"),
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
                     return ListView.builder(
@@ -54,10 +54,12 @@ class _BookmarkScreenState extends State<BookmarkScreen> {
                                     style: TextStyle(
                                       color: Colors.grey[600],
                                     ),
+                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: 2,
                                   ),
                                   const SizedBox(height: 5),
                                   Text(
-                                    '기간: ${snapshot.data![index].start_date} ~ ${snapshot.data![index].end_date}', // 기간 날짜 텍스트
+                                    '${snapshot.data![index].start_date} ~ ${snapshot.data![index].end_date}', // 기간 날짜 텍스트
                                     style: TextStyle(
                                       color: Colors.grey[600],
                                     ),

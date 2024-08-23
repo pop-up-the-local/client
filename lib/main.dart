@@ -38,14 +38,14 @@ class _MyAppState extends State<MyApp> {
 
   static const List<Widget> _screenList = [
     HomeScreen(),
-    PopUpDetailedScreen(),
+    //PopUpDetailedScreen(),
     PopUpListScreen(),
     //ApplicationScreen(),
     //ImageUploadScreen(),
     //MyPageScreen(),
     //SignUpBusinessScreen(),
     //SignUpCustomerScreen(),
-    //BookmarkScreen(),
+    BookmarkScreen(),
   ];
 
   void _onBottomNavTapped(int index) {
