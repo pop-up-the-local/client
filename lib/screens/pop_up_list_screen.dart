@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:pop_up_the_local/services/pop_up_list_service.dart';
+import 'package:pop_up_the_local/style/theme.dart';
 import 'package:pop_up_the_local/widgets/custom_dropdown_widget.dart';
-
-import '../services/bookmark_service.dart';
-import '../style/theme.dart';
 
 class PopUpListScreen extends StatefulWidget {
   const PopUpListScreen({super.key});
@@ -12,7 +11,26 @@ class PopUpListScreen extends StatefulWidget {
 }
 
 class _PopUpListScreenState extends State<PopUpListScreen> {
-  bool _isBookmarked = true;
+  String _selectedLocation = '전체';
+  String _selectedIndustry = '전체';
+  List<dynamic> _popupList = [];
+
+  List<dynamic> popUps = [];
+  final PopUpListService _popUpListService = PopUpListService();
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchPopUps();
+  }
+
+  void _fetchPopUps() async {
+    var fetchedPopUps = await _popUpListService.fetchPopUps(null, null);
+    setState(() {
+      popUps = fetchedPopUps;
+    });
+  }
+
   final List<String> _industries = <String>[
     '전체',
     '요식',
@@ -52,8 +70,30 @@ class _PopUpListScreenState extends State<PopUpListScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              CustomDropdownWidget(categories: _industries),
-              CustomDropdownWidget(categories: _locations),
+              CustomDropdownWidget(
+                categories: _industries,
+                onChanged: (String? newValue) async {
+                  final popupList = await _popUpListService.fetchPopUps(
+                      _selectedLocation, newValue!);
+                  setState(() {
+                    _selectedIndustry = newValue;
+                    _popupList = popupList;
+                  });
+                },
+                dropdownValue: _selectedIndustry,
+              ),
+              CustomDropdownWidget(
+                categories: _locations,
+                onChanged: (String? newValue) async {
+                  setState(() {
+                    _selectedLocation = newValue!;
+                    _popUpListService
+                        .fetchPopUps(newValue, _selectedLocation)
+                        .then((value) => setState(() {}));
+                  });
+                },
+                dropdownValue: _selectedLocation,
+              ),
             ],
           ),
           Expanded(
@@ -65,92 +105,48 @@ class _PopUpListScreenState extends State<PopUpListScreen> {
   }
 
   Widget _buildPopUpList() {
-    return Container(
-      color: Colors.white,
-      child: FutureBuilder(
-        future: getBookmarkList("66c4403a3e0e4edeae03270a"), // 함수 수정 필요
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            return ListView.builder(
-              itemCount: snapshot.data!.length,
-              itemBuilder: (context, index) {
-                return Column(
+    return SizedBox(
+      height: 240,
+      child: ListView.builder(
+        scrollDirection: Axis.vertical,
+        itemCount: popUps.length,
+        itemBuilder: (context, index) {
+          var popup = popUps[index];
+          return Column(
+            children: [
+              InkWell(
+                // 팝업 클릭 시 이동
+                onTap: () {},
+                child: Column(
                   children: [
-                    ListTile(
-                      minVerticalPadding: 10.0,
-                      leading: ClipRRect(
-                        borderRadius:
-                            BorderRadius.circular(8.0), // 원하는 반경 값으로 설정
-                        child: Image.network(
-                          snapshot.data![index].image,
-                          width: 70,
-                          height: 80,
-                          fit: BoxFit.cover, // 이미지가 잘리지 않도록 설정
-                        ),
-                      ),
-                      title: Text(
-                        snapshot.data![index].title,
-                        style: Theme.of(context).textTheme.titleLarge,
-                      ),
-                      subtitle: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const SizedBox(height: 5),
-                          Text(
-                            snapshot.data![index].description, // 설명 텍스트
-                            style: TextStyle(
-                              color: Colors.grey[600],
-                            ),
+                    Container(
+                        width: 140,
+                        height: 160,
+                        margin: const EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          color: ColorTheme.background,
+                          borderRadius: BorderRadius.circular(20),
+                          image: DecorationImage(
+                            image: NetworkImage(popup.image), // 팝업 대표 이미지
+                            //image: AssetImage('assets/img/couple_date.png'),
+                            fit: BoxFit.cover,
                           ),
-                          const SizedBox(height: 5),
-                          Text(
-                            '기간: ${snapshot.data![index].start_date} ~ ${snapshot.data![index].end_date}', // 기간 날짜 텍스트
-                            style: TextStyle(
-                              color: Colors.grey[600],
-                            ),
-                          ),
-                        ],
-                      ),
-                      // trailing: IconButton(
-                      //   onPressed: () {
-                      //     _isBookmarked = !_isBookmarked;
-                      //     setState(() {});
-                      //     _onPressBookmark();
-                      //   },
-                      //   icon: Icon(
-                      //     _isBookmarked
-                      //         ? Icons.bookmark
-                      //         : Icons.bookmark_border,
-                      //     color: ColorTheme.background,
-                      //   ),
-                      // ),
-                      contentPadding: const EdgeInsets.symmetric(
-                          horizontal: 16.0, vertical: 8.0),
-                      onTap: () {
-                        // 아이템 클릭 시 동작
-                        print('Tapped on ${snapshot.data![index].title}');
-                      },
+                        )),
+                    Text(
+                      popup.title,
+                      // '대구 수성구',
+                      style: Theme.of(context).textTheme.titleMedium, // 팝업 위치
                     ),
-                    const Divider(
-                      color: Color.fromARGB(37, 73, 73, 73),
-                      thickness: 1.0,
-                      indent: 16.0,
-                      endIndent: 16.0,
-                    ),
+                    Text(popup.address,
+                        // '말이 많다',
+                        style: Theme.of(context).textTheme.titleSmall), // 팝업 이름
                   ],
-                );
-              },
-            );
-          } else if (snapshot.hasError) {
-            return Text('${snapshot.error}');
-          }
-          return const CircularProgressIndicator();
+                ),
+              ),
+            ],
+          );
         },
       ),
     );
-  }
-
-  void _onPressBookmark() {
-    // TODO: 북마크 추가/삭제 기능 구현
   }
 }

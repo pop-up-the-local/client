@@ -7,9 +7,32 @@ class PopUpListService {
   String? apiUrl = dotenv
       .env['BASE_URL']; // Make sure this is correctly set in your .env file
 
-  Future<dynamic> fetchPopUps() async {
+  Future<dynamic> fetchPopUps(String? category, String? city) async {
+    var url = '$apiUrl/api/popups/list';
+
+    if (category != null) {
+      switch (category) {
+        case '요식':
+          category = 'FOOD';
+          break;
+        case '제조':
+          category = 'MANUFACTUR';
+          break;
+        case '예술':
+          category = 'ART';
+          break;
+        case '교육':
+          category = 'EDU';
+          break;
+      }
+      url += '?category=$category';
+    }
+    if (city != null) {
+      url += '?city=$city';
+    }
+
     try {
-      var response = await http.get(Uri.parse('$apiUrl/api/popups/list'));
+      var response = await http.get(Uri.parse(url));
       if (response.statusCode == 200) {
         final data = jsonDecode(utf8.decode(response.bodyBytes))['data'];
         print(data);

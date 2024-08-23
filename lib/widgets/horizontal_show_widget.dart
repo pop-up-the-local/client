@@ -23,7 +23,7 @@ class _HorizontalShowState extends State<HorizontalShow> {
   }
 
   void _fetchPopUps() async {
-    var fetchedPopUps = await _popUpListService.fetchPopUps();
+    var fetchedPopUps = await _popUpListService.fetchPopUps(null, null);
     setState(() {
       popUps = fetchedPopUps;
     });
