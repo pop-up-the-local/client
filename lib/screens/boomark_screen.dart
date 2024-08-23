@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:pop_up_the_local/services/bookmark_server.dart';
+import 'package:pop_up_the_local/services/bookmark_service.dart';
 import 'package:pop_up_the_local/style/theme.dart';
 
 class BookmarkScreen extends StatefulWidget {
