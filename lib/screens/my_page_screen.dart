@@ -3,6 +3,9 @@ import 'package:pop_up_the_local/screens/boomark_screen.dart';
 import 'package:pop_up_the_local/services/popup_service.dart';
 import 'package:pop_up_the_local/style/theme.dart';
 
+import 'application_history_screen.dart';
+import 'application_screen.dart';
+
 class MyPageScreen extends StatefulWidget {
   const MyPageScreen({super.key});
 
@@ -158,6 +161,30 @@ class _MypageState extends State<MyPageScreen> {
                         width: 16, // 왼쪽에 추가할 공간
                       ),
                       const Icon(
+                        // 제출 아이콘
+                        Icons.assignment,
+                        color: Color(0xff9DC284),
+                      ),
+                      const Padding(padding: EdgeInsets.only(left: 8.0)),
+                      Text(
+                        '팝업 등록 신청',
+                        style: Theme.of(context).textTheme.labelLarge,
+                      ),
+                      const Spacer(),
+                      IconButton(
+                          onPressed: onNavigateApplication,
+                          icon: const Icon(
+                            Icons.arrow_forward_ios,
+                            size: 16,
+                          )),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      const SizedBox(
+                        width: 16, // 왼쪽에 추가할 공간
+                      ),
+                      const Icon(
                         Icons.list_alt_rounded,
                         color: Color(0xff9DC284),
                       ),
@@ -168,7 +195,7 @@ class _MypageState extends State<MyPageScreen> {
                       ),
                       const Spacer(),
                       IconButton(
-                          onPressed: onNavigateApplication,
+                          onPressed: onNavigateApplicationHistory,
                           icon: const Icon(
                             Icons.arrow_forward_ios,
                             size: 16,
@@ -221,6 +248,17 @@ class _MypageState extends State<MyPageScreen> {
   }
 
   void onNavigateApplication() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => ApplicationScreen()),
+    );
+  }
+
+  void onNavigateApplicationHistory() {
     // TODO: 팝업 등록 현황으로 이동
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => ApplicationHistoryScreen()),
+    );
   }
 }
