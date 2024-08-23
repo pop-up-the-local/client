@@ -6,11 +6,11 @@ import 'package:pop_up_the_local/screens/home_screen.dart';
 import 'package:pop_up_the_local/screens/pop_up_detailed_screen.dart';
 import 'package:pop_up_the_local/screens/pop_up_list_screen.dart';
 import 'package:intl/date_symbol_data_local.dart';
-import 'package:pop_up_the_local/screens/simple_sign_up_screen.dart';
+import 'package:pop_up_the_local/screens/sign_up_customer_screen.dart';
+import 'screens/sign_up_business_screen.dart';
 
 import 'screens/image_upload_screen.dart';
 import 'screens/my_page_screen.dart';
-import 'screens/sign_up_screen.dart';
 import 'style/theme.dart';
 
 void main() async {
@@ -42,8 +42,8 @@ class _MyAppState extends State<MyApp> {
     //ApplicationScreen(),
     //ImageUploadScreen(),
     //MyPageScreen(),
-    SignUpScreen(),
-    SimpleSignUpScreen(),
+    SignUpBusinessScreen(),
+    SignUpCustomerScreen(),
   ];
 
   void _onBottomNavTapped(int index) {
