@@ -188,9 +188,7 @@ class _MypageState extends State<MyPageScreen> {
               height: 50,
               width: 252,
               child: TextButton(
-                onPressed: () {
-                  createPopup();
-                },
+                onPressed: () {},
                 style: TextButton.styleFrom(
                   padding: EdgeInsets.zero,
                   backgroundColor: ColorTheme.background,

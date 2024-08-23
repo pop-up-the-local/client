@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:pop_up_the_local/services/popup_service.dart';
 import 'package:pop_up_the_local/style/theme.dart';
 import 'package:pop_up_the_local/widgets/horizontal_show_widget.dart';
 import 'package:pop_up_the_local/widgets/title_widget.dart';
 
 class PopUpDetailedScreen extends StatefulWidget {
-  const PopUpDetailedScreen({super.key});
+  const PopUpDetailedScreen({super.key, required this.popupId});
+
+  final String popupId;
 
   @override
   State<PopUpDetailedScreen> createState() => _PopUpDetailedScreenState();
@@ -13,6 +16,22 @@ class PopUpDetailedScreen extends StatefulWidget {
 class _PopUpDetailedScreenState extends State<PopUpDetailedScreen> {
   bool _isBookmarked = false;
   bool _isExpanded = false;
+  dynamic popUp = {};
+  List<dynamic> images = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchPopUp();
+  }
+
+  Future<void> _fetchPopUp() async {
+    var fetchedPopUp = await getPopupDetail(widget.popupId);
+    setState(() {
+      popUp = fetchedPopUp;
+      images = popUp['images'];
+    });
+  }
 
   void _toggleExpand() {
     setState(() {
@@ -34,6 +53,7 @@ class _PopUpDetailedScreenState extends State<PopUpDetailedScreen> {
 
   @override
   Widget build(BuildContext context) {
+    images = popUp['images'];
     return Scaffold(
       // 팝업 상세 페이지
       body: Stack(
@@ -44,10 +64,9 @@ class _PopUpDetailedScreenState extends State<PopUpDetailedScreen> {
               children: [
                 Container(
                   height: 243,
-                  decoration: const BoxDecoration(
+                  decoration: BoxDecoration(
                     image: DecorationImage(
-                        image: AssetImage('assets/img/couple_date.png'),
-                        fit: BoxFit.cover),
+                        image: NetworkImage(images[0]), fit: BoxFit.cover),
                   ),
                 ),
                 // 팝업 상세 정보
@@ -70,15 +89,15 @@ class _PopUpDetailedScreenState extends State<PopUpDetailedScreen> {
                             children: [
                               Text.rich(
                                 TextSpan(
-                                  text: '팝업 이름',
+                                  text: popUp['title'],
                                   style: Theme.of(context)
                                       .textTheme
                                       .headlineMedium,
-                                  children: const [
+                                  children: [
                                     // 빈칸 넣기
                                     TextSpan(text: '  '),
                                     TextSpan(
-                                        text: '팝업 위치',
+                                        text: popUp['address'],
                                         style: TextStyle(
                                             color: Colors.grey,
                                             fontSize: 16,
@@ -153,9 +172,8 @@ class _PopUpDetailedScreenState extends State<PopUpDetailedScreen> {
                           crossAxisCount: 1, // 노출 이미지 수
                           shrinkWrap: true, // 스크롤 가능 여부
                           physics: const NeverScrollableScrollPhysics(),
-                          children: List.generate(6, (index) {
-                            return _buildImageCard(
-                                'assets/img/couple_date.png');
+                          children: List.generate(images.length, (index) {
+                            return _buildImageCard(images[index]);
                           }),
                         )
                       : GridView.count(
@@ -165,9 +183,8 @@ class _PopUpDetailedScreenState extends State<PopUpDetailedScreen> {
                           crossAxisCount: 1,
                           shrinkWrap: true,
                           physics: const NeverScrollableScrollPhysics(),
-                          children: List.generate(6, (index) {
-                            return _buildImageCard(
-                                'assets/img/couple_date.png');
+                          children: List.generate(images.length, (index) {
+                            return _buildImageCard(images[index]);
                           }),
                         ),
                 ),
@@ -207,16 +224,19 @@ class _PopUpDetailedScreenState extends State<PopUpDetailedScreen> {
 
   Widget _buildImageCard(String imagePath) {
     return Card(
-      //key: _imageCardKey,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(0),
-      ),
-      margin: const EdgeInsets.all(0),
-      child: Image.asset(
-        imagePath,
-        height: 410,
-        fit: BoxFit.fitHeight,
-      ),
-    );
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(0),
+        ),
+        margin: const EdgeInsets.all(0),
+        child: Image(
+          image: NetworkImage(imagePath),
+          fit: BoxFit.cover,
+        )
+        // child: Image.asset(
+        //   imagePath,
+        //   height: 410,
+        //   fit: BoxFit.fitHeight,
+        // ),
+        );
   }
 }

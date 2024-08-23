@@ -41,3 +41,15 @@ Future<dynamic> createPopup() async {
     });
   }
 }
+
+Future<dynamic> getPopupDetail(String popupId) async {
+  String? baseUrl = dotenv.env['BASE_URL'];
+  Dio dio = Dio();
+  final Response data = await dio.get('$baseUrl/api/popups/$popupId');
+
+  if (data.statusCode == 200) {
+    return data.data['data'];
+  } else {
+    throw Exception('Failed to load popup detail');
+  }
+}
