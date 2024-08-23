@@ -36,7 +36,6 @@ class PopUpListService {
       }
     }
 
-    print(url);
     try {
       var response = await http.get(Uri.parse(url));
       if (response.statusCode == 200) {

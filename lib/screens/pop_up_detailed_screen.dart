@@ -40,6 +40,12 @@ class _PopUpDetailedScreenState extends State<PopUpDetailedScreen> {
   }
 
   void _toggleBookmark() {
+    if (_isBookmarked) {
+      // 북마크 해제
+    } else {
+      createBookmark(popUp['popup_id']);
+    }
+
     setState(() {
       _isBookmarked = !_isBookmarked;
     });
@@ -157,11 +163,10 @@ class _PopUpDetailedScreenState extends State<PopUpDetailedScreen> {
                   duration: const Duration(milliseconds: 300),
                   // get size of _buildImageCard() and multiply by number of images
                   // set height as reactive to the number of images
-                  height: _isExpanded ? 410 * 6 : 410,
+                  height: _isExpanded ? 410 * images.length.toDouble() : 410,
 
                   decoration: const BoxDecoration(
                     border: Border(
-                        //top: BorderSide(color: Colors.grey, width: 0.3),
                         bottom: BorderSide(color: Colors.grey, width: 0.3)),
                   ),
                   child: _isExpanded

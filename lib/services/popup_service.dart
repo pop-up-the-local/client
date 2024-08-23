@@ -53,3 +53,19 @@ Future<dynamic> getPopupDetail(String popupId) async {
     throw Exception('Failed to load popup detail');
   }
 }
+
+Future<dynamic> createBookmark(String popupId) async {
+  String? baseUrl = dotenv.env['BASE_URL'];
+  Dio dio = Dio();
+
+  final url = '$baseUrl/api/bookmarks/$popupId';
+  print(url);
+
+  final Response data = await dio.post('$baseUrl/api/bookmarks/$popupId');
+
+  if (data.statusCode == 200) {
+    return data.data['data'];
+  } else {
+    throw Exception('Failed to add bookmark');
+  }
+}

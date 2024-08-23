@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pop_up_the_local/screens/pop_up_detailed_screen.dart';
 import 'package:pop_up_the_local/services/pop_up_list_service.dart';
 import 'package:pop_up_the_local/style/theme.dart';
 import 'package:pop_up_the_local/widgets/custom_dropdown_widget.dart';
@@ -110,7 +111,14 @@ class _PopUpListScreenState extends State<PopUpListScreen> {
           subtitle: Text(popup.address),
           leading: Image.network(popup.image, fit: BoxFit.cover),
           onTap: () {
-            // 터치 이벤트 처리, 예: 팝업 상세 페이지로 이동
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => PopUpDetailedScreen(
+                  popupId: popup.popup_id,
+                ),
+              ),
+            );
           },
         );
       },
