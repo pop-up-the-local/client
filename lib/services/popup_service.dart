@@ -79,3 +79,18 @@ Future<dynamic> deleteBookmark(String bookmarkId) async {
     throw Exception('Failed to delete bookmark');
   }
 }
+
+Future<dynamic> createComment(Map<String, dynamic> request) async {
+  String? baseUrl = dotenv.env['BASE_URL'];
+  Dio dio = Dio();
+
+  final dto = FormData.fromMap(request);
+
+  final Response data = await dio.post('$baseUrl/api/comment', data: dto);
+
+  if (data.statusCode == 200) {
+    return data.data['data'];
+  } else {
+    throw Exception('Failed to add Comment');
+  }
+}
