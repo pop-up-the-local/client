@@ -1,7 +1,9 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:pop_up_the_local/widgets/custom_progress_ring_widget.dart';
 import 'package:pop_up_the_local/widgets/custom_dropdown_white_widget.dart';
@@ -30,6 +32,7 @@ class _ApplicationScreenState extends State<ApplicationScreen> {
   final TextEditingController _descriptionController = TextEditingController();
   String _selectedLocation = '전체';
   String _selectedIndustry = '전체';
+  String? apiUrl = dotenv.env['BASE_URL'];
 
   @override
   void initState() {
@@ -122,16 +125,20 @@ class _ApplicationScreenState extends State<ApplicationScreen> {
   }
 
   Future<void> _submitData() async {
-    var uri = Uri.parse('YOUR_BACKEND_URL'); // 서버 URL 변경 필요
+    var uri = Uri.parse('$apiUrl/api/application'); // 서버 URL 변경 필요
     var request = http.MultipartRequest('POST', uri);
 
+    DateTime endDate = _selectedDay.add(const Duration(days: 4));
+
     // 기타 정보 추가
-    request.fields['storeName'] = _storeNameController.text;
+    request.fields['title'] = _storeNameController.text;
+    request.fields['address'] = '$_selectedLocation,청호로,12345';
+    request.fields['category'] = 'FOOD';
     request.fields['description'] = _descriptionController.text;
-    request.fields['location'] = _selectedLocation;
-    request.fields['industry'] = _selectedIndustry;
     request.fields['startDate'] =
         _selectedDay.toString().substring(0, 10); // 예: 2023-01-01 형식으로 변경 필요
+    request.fields['endDate'] =
+        endDate.toString().substring(0, 10); // 예: 2023-01-01 형식으로 변경 필요
 
     // 이미지 파일 추가
     if (_selectedImages != null) {
@@ -142,17 +149,21 @@ class _ApplicationScreenState extends State<ApplicationScreen> {
         );
         request.files.add(multipartFile);
       }
+      print('Images added!');
     }
 
     print(request.fields);
+    print(request.files);
 
     // 서버 요청 및 응답 처리
     var response = await request.send();
+    print(response.statusCode);
     if (response.statusCode == 200) {
       print('Submitted successfully!');
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text('제출 성공!')));
     } else {
+      print(response.statusCode);
       print('Submit failed!');
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text('제출 실패!')));

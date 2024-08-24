@@ -39,11 +39,11 @@ class _MyAppState extends State<MyApp> {
   static const List<Widget> _screenList = [
     HomeScreen(),
     // PopUpDetailedScreen(),
-    PopUpListScreen(),
+    //PopUpListScreen(),
+    SignUpBusinessScreen(),
     //ApplicationScreen(),
     //ImageUploadScreen(),
     MyPageScreen(),
-    //SignUpBusinessScreen(),
     //SignUpCustomerScreen(),
     //BookmarkScreen(),
   ];
