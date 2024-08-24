@@ -48,7 +48,7 @@ showNotification() async {
   );
 
   // 알림 id, 제목, 내용 맘대로 채우기
-  notifications.show(1, '북마크 알림', '',
+  notifications.show(1, '팝업 오픈 알림', '원데이 비누 클래스(이)가 내일부터 시작합니다!',
       NotificationDetails(android: androidDetails, iOS: iosDetails),
       payload: '부가정보');
 }
