@@ -53,7 +53,7 @@ class _HorizontalShowState extends State<HorizontalShow> {
                   //     ),
                   //   ),
                   // );
-                  //showNotification();
+                  showNotification();
                 },
                 child: Column(
                   children: [

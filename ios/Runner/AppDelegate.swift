@@ -6,8 +6,8 @@ import UIKit
   override func application(
     _ application: UIApplication,
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
-  ) -> Bool {ebase 초기화
-  if #available(iOS 15.0, *) {
+  ) -> Bool {
+  if #available(iOS 10.0, *) {
       UNUserNotificationCenter.current().delegate = self as? UNUserNotificationCenterDelegate
   }
     GeneratedPluginRegistrant.register(with: self)
