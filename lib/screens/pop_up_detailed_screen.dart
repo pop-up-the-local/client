@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pop_up_the_local/services/popup_service.dart';
 import 'package:pop_up_the_local/style/theme.dart';
@@ -94,26 +95,44 @@ class _PopUpDetailedScreenState extends State<PopUpDetailedScreen> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text.rich(
-                                TextSpan(
-                                  text: popUp['title'],
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .headlineMedium,
-                                  children: [
-                                    // 빈칸 넣기
-                                    TextSpan(text: '  '),
-                                    TextSpan(
-                                        text: popUp['address'],
-                                        style: TextStyle(
-                                            color: Colors.grey,
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w500)),
-                                    // style:
-                                    //     Theme.of(context).textTheme.bodyMedium),
-                                  ],
-                                ),
+                              Row(
+                                children: [
+                                  Text(
+                                    popUp['title'],
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .headlineMedium,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                  const SizedBox(width: 10),
+                                  // Text(popUp['address'],
+                                  //     style: const TextStyle(
+                                  //         color: Colors.grey,
+                                  //         fontSize: 16,
+                                  //         fontWeight: FontWeight.w500),
+                                  //     overflow: TextOverflow.ellipsis),
+                                ],
                               ),
+                              // Text.rich(
+                              //   TextSpan(
+                              //     text: popUp['title'],
+                              //     style: Theme.of(context)
+                              //         .textTheme
+                              //         .headlineMedium,
+                              //     children: [
+                              //       // 빈칸 넣기
+                              //       TextSpan(text: '  '),
+                              //       TextSpan(
+                              //           text: popUp['address'],
+                              //           style: TextStyle(
+                              //               color: Colors.grey,
+                              //               fontSize: 16,
+                              //               fontWeight: FontWeight.w500)),
+                              //       // style:
+                              //       //     Theme.of(context).textTheme.bodyMedium),
+                              //     ],
+                              //   ),
+                              // ),
                               IconButton(
                                 onPressed: _toggleBookmark,
                                 icon: Icon(
@@ -130,12 +149,13 @@ class _PopUpDetailedScreenState extends State<PopUpDetailedScreen> {
                         const SizedBox(height: 20),
                         Align(
                           alignment: Alignment.centerLeft,
-                          child: Text('기간: 2021.08.01 ~ 2021.08.31',
+                          child: Text(
+                              '${popUp['start_date']} ~ ${popUp['end_date']}',
                               style: Theme.of(context).textTheme.bodyMedium),
                         ),
                         Align(
                           alignment: Alignment.centerLeft,
-                          child: Text('장소: 대구 북구 대현동 123-4 1층',
+                          child: Text('장소: ${popUp['address']}',
                               style: Theme.of(context).textTheme.bodyMedium),
                         ),
                       ],
@@ -154,10 +174,10 @@ class _PopUpDetailedScreenState extends State<PopUpDetailedScreen> {
                     ),
                   ),
                   child: Text(
-                    '팝업 상세 설명입니다.팝업 상세 설명입니다.팝업 상세 설명입니다.팝업 상세 설명입니다.팝업 상세 설명입니다.팝업 상세 설명입니다.팝업 상세 설명입니다.팝업 상세 설명입니다.팝업 상세 설명입니다.팝업 상세 설명입니다.팝업 상세 설명입니다.팝업 상세 설명입니다.팝업 상세 설명입니다.팝업 상세 설명입니다.팝업 상세 설명입니다.',
+                    popUp['description'],
                     style: Theme.of(context).textTheme.bodyMedium,
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 5,
+                    //qwqwwqoverflow: TextOverflow.ellipsis,
+                    maxLines: 50,
                   ),
                 ),
                 AnimatedContainer(
@@ -219,6 +239,31 @@ class _PopUpDetailedScreenState extends State<PopUpDetailedScreen> {
                   ),
                 ),
                 const TitleWidget(title: "유사한 동네 팝업", keyWord: "유사한 동네 팝업"),
+                // Container(
+                //   padding: const EdgeInsets.symmetric(horizontal: 20),
+                //   child: CupertinoTextField(
+                //     placeholder: '댓글을 입력하세요',
+                //     padding: const EdgeInsets.all(20),
+                //     decoration: BoxDecoration(
+                //       color: Colors.white,
+                //       border: Border.all(color: Colors.grey),
+                //       borderRadius: BorderRadius.circular(20),
+                //     ),
+                //     suffix: Padding(
+                //       padding: const EdgeInsets.only(right: 10),
+                //       child: IconButton(
+                //         onPressed: () {
+                //           // 밥 먹고 와서 creat Comment 함수 만들어야 함
+                //         },
+                //         icon: Icon(
+                //           Icons.send,
+                //           color: ColorTheme.background,
+                //         ),
+                //       ),
+                //     ),
+                //   ),
+                // ),
+
                 const HorizontalShow(),
               ],
             ),
@@ -230,19 +275,14 @@ class _PopUpDetailedScreenState extends State<PopUpDetailedScreen> {
 
   Widget _buildImageCard(String imagePath) {
     return Card(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(0),
-        ),
-        margin: const EdgeInsets.all(0),
-        child: Image(
-          image: NetworkImage(imagePath),
-          fit: BoxFit.cover,
-        )
-        // child: Image.asset(
-        //   imagePath,
-        //   height: 410,
-        //   fit: BoxFit.fitHeight,
-        // ),
-        );
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(0),
+      ),
+      margin: const EdgeInsets.all(0),
+      child: Image(
+        image: NetworkImage(imagePath),
+        fit: BoxFit.cover,
+      ),
+    );
   }
 }
