@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pop_up_the_local/app.dart';
 
 class ColorTheme {
   static var defaultColor = const Color.fromARGB(255, 0, 0, 0);
@@ -47,55 +48,67 @@ ThemeData theme = ThemeData(
 
   // Text Style
   textTheme: TextTheme(
-    headlineLarge: const TextStyle(
+    headlineLarge: TextStyle(
       fontSize: 40,
       fontWeight: FontWeight.bold,
       color: Colors.white,
+      fontFamily: App.font,
     ),
     headlineMedium: TextStyle(
       fontSize: 24,
       fontWeight: FontWeight.bold,
       color: ColorTheme.defaultColor,
+      fontFamily: App.font,
     ),
     titleLarge: TextStyle(
       fontSize: 18,
       fontWeight: FontWeight.bold,
       color: ColorTheme.defaultColor,
+      fontFamily: App.font,
     ),
     titleMedium: TextStyle(
       fontSize: 16,
       fontWeight: FontWeight.bold,
       color: ColorTheme.defaultColor,
+      fontFamily: App.font,
     ),
     titleSmall: TextStyle(
       fontSize: 14,
       fontWeight: FontWeight.bold,
       color: ColorTheme.defaultColor,
+      fontFamily: App.font,
     ),
     bodyLarge: TextStyle(
       fontSize: 24,
       color: ColorTheme.defaultColor,
+      fontFamily: App.font,
     ),
     bodyMedium: TextStyle(
       fontSize: 14,
       color: ColorTheme.defaultColor,
+      fontFamily: App.font,
     ),
     bodySmall: TextStyle(
       fontSize: 12,
       color: ColorTheme.defaultColor,
+      fontFamily: App.font,
     ),
     labelLarge: TextStyle(
       fontSize: 14,
       color: ColorTheme.defaultColor,
+      fontFamily: App.font,
     ),
     labelMedium: TextStyle(
       fontSize: 12,
       color: ColorTheme.defaultColor,
       fontWeight: FontWeight.bold,
+      fontFamily: App.font,
     ),
     labelSmall: TextStyle(
-        fontSize: 10,
-        color: ColorTheme.defaultColor,
-        fontWeight: FontWeight.bold),
+      fontSize: 10,
+      color: ColorTheme.defaultColor,
+      fontWeight: FontWeight.bold,
+      fontFamily: App.font,
+    ),
   ),
 );

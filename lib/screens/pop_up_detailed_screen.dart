@@ -30,6 +30,7 @@ class _PopUpDetailedScreenState extends State<PopUpDetailedScreen> {
     setState(() {
       popUp = fetchedPopUp;
       images = popUp['images'];
+      _isBookmarked = popUp['bookmark_id'] != null;
     });
   }
 
@@ -41,7 +42,7 @@ class _PopUpDetailedScreenState extends State<PopUpDetailedScreen> {
 
   void _toggleBookmark() {
     if (_isBookmarked) {
-      // 북마크 해제
+      deleteBookmark(popUp['bookmark_id']);
     } else {
       createBookmark(popUp['popup_id']);
     }

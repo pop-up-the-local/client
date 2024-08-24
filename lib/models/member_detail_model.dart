@@ -3,26 +3,20 @@ class MemberDetail {
   final String? role;
   final String? image;
   final String? name;
-  final List<Bookmark>? bookmarks;
 
   MemberDetail({
     required this.email,
     required this.role,
     required this.image,
     required this.name,
-    required this.bookmarks,
   });
 
   factory MemberDetail.fromJson(Map<String, dynamic> json) {
     return MemberDetail(
-      email: json['email'],
-      role: json['role'],
-      image: json['image'],
-      name: json['name'],
-      bookmarks: json['bookmarks'].map<Bookmark>((bookmark) {
-        return Bookmark.fromJson(bookmark);
-      }).toList(),
-    );
+        email: json['email'],
+        role: json['role'],
+        image: json['image'],
+        name: json['name']);
   }
 }
 

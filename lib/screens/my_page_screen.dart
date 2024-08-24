@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:pop_up_the_local/models/member_detail_model.dart';
 import 'package:pop_up_the_local/screens/boomark_screen.dart';
-import 'package:pop_up_the_local/services/popup_service.dart';
+import 'package:pop_up_the_local/services/mypage_service.dart';
 import 'package:pop_up_the_local/style/theme.dart';
 
 import 'application_history_screen.dart';
@@ -14,6 +15,21 @@ class MyPageScreen extends StatefulWidget {
 }
 
 class _MypageState extends State<MyPageScreen> {
+  MemberDetail? member;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchMember();
+  }
+
+  void _fetchMember() async {
+    var fetchedMember = await getMemberDetail();
+    setState(() {
+      member = fetchedMember;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -24,22 +40,24 @@ class _MypageState extends State<MyPageScreen> {
               Container(
                 height: 266, // 상단 배경 높이 조정
                 color: ColorTheme.background, // 원하는 색상
-                child: const Center(
+                child: Center(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       SizedBox(height: 40),
-                      CircleAvatar(
-                        radius: 40,
-                        backgroundImage: NetworkImage(
-                            'https://example.com/profile.jpg'), // 프로필 이미지 URL
-                      ),
+                      if (member != null)
+                        CircleAvatar(
+                          radius: 40,
+                          backgroundImage:
+                              NetworkImage(member!.image!), // 프로필 이미지 URL
+                        ),
                       SizedBox(height: 10),
-                      Text(
-                        '사용자 이름', // 사용자 이름
-                        style: TextStyle(
-                            color: Colors.white, fontWeight: FontWeight.w900),
-                      ),
+                      if (member != null)
+                        Text(
+                          member!.name!, // 사용자 이름
+                          style: TextStyle(
+                              color: Colors.white, fontWeight: FontWeight.w900),
+                        ),
                     ],
                   ),
                 ),
@@ -83,10 +101,11 @@ class _MypageState extends State<MyPageScreen> {
                       const SizedBox(
                         width: 30,
                       ),
-                      Text(
-                        'email@gmail.com',
-                        style: Theme.of(context).textTheme.bodyMedium,
-                      )
+                      if (member != null)
+                        Text(
+                          member!.email!,
+                          style: Theme.of(context).textTheme.bodyMedium,
+                        )
                     ],
                   ),
                   const SizedBox(height: 10),
@@ -102,10 +121,11 @@ class _MypageState extends State<MyPageScreen> {
                       const SizedBox(
                         width: 40,
                       ),
-                      Text(
-                        '고객',
-                        style: Theme.of(context).textTheme.bodyMedium,
-                      )
+                      if (member != null)
+                        Text(
+                          member!.role! == 'SELLER' ? '사업자 회원' : '일반 회원',
+                          style: Theme.of(context).textTheme.bodyMedium,
+                        )
                     ],
                   ),
                 ],

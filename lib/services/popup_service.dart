@@ -58,14 +58,24 @@ Future<dynamic> createBookmark(String popupId) async {
   String? baseUrl = dotenv.env['BASE_URL'];
   Dio dio = Dio();
 
-  final url = '$baseUrl/api/bookmarks/$popupId';
-  print(url);
-
   final Response data = await dio.post('$baseUrl/api/bookmarks/$popupId');
 
   if (data.statusCode == 200) {
     return data.data['data'];
   } else {
     throw Exception('Failed to add bookmark');
+  }
+}
+
+Future<dynamic> deleteBookmark(String bookmarkId) async {
+  String? baseUrl = dotenv.env['BASE_URL'];
+  Dio dio = Dio();
+
+  final Response data = await dio.delete('$baseUrl/api/bookmarks/$bookmarkId');
+
+  if (data.statusCode == 200) {
+    return data.data['data'];
+  } else {
+    throw Exception('Failed to delete bookmark');
   }
 }

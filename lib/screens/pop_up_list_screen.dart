@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pop_up_the_local/screens/pop_up_detailed_screen.dart';
 import 'package:pop_up_the_local/services/pop_up_list_service.dart';
-import 'package:pop_up_the_local/style/theme.dart';
 import 'package:pop_up_the_local/widgets/custom_dropdown_widget.dart';
 
 class PopUpListScreen extends StatefulWidget {
@@ -106,20 +105,39 @@ class _PopUpListScreenState extends State<PopUpListScreen> {
       itemCount: _popupList.length,
       itemBuilder: (context, index) {
         var popup = _popupList[index];
-        return ListTile(
-          title: Text(popup.title),
-          subtitle: Text(popup.address),
-          leading: Image.network(popup.image, fit: BoxFit.cover),
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => PopUpDetailedScreen(
-                  popupId: popup.popup_id,
-                ),
+        return Card(
+          elevation: 3,
+          shadowColor: Colors.grey[100],
+          color: Colors.white,
+          margin: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+          child: ListTile(
+            contentPadding: EdgeInsets.all(10),
+            title: Text(
+              popup.title,
+              style: Theme.of(context).textTheme.bodyLarge,
+            ),
+            subtitle: Text(
+              popup.address,
+              style: Theme.of(context).textTheme.bodyMedium,
+            ),
+            leading: ClipRRect(
+              borderRadius: BorderRadius.circular(8.0),
+              child: Image.network(
+                popup.image,
+                width: 80,
               ),
-            );
-          },
+            ),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => PopUpDetailedScreen(
+                    popupId: popup.popup_id,
+                  ),
+                ),
+              );
+            },
+          ),
         );
       },
     );
