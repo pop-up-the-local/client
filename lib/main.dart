@@ -7,6 +7,7 @@ import 'package:pop_up_the_local/screens/pop_up_detailed_screen.dart';
 import 'package:pop_up_the_local/screens/pop_up_list_screen.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:pop_up_the_local/screens/sign_up_customer_screen.dart';
+import 'notify/notification.dart';
 import 'screens/boomark_screen.dart';
 import 'screens/sign_up_business_screen.dart';
 
@@ -39,8 +40,8 @@ class _MyAppState extends State<MyApp> {
   static const List<Widget> _screenList = [
     HomeScreen(),
     // PopUpDetailedScreen(),
-    //PopUpListScreen(),
-    SignUpBusinessScreen(),
+    PopUpListScreen(),
+    //SignUpBusinessScreen(),
     //ApplicationScreen(),
     //ImageUploadScreen(),
     MyPageScreen(),
@@ -60,6 +61,13 @@ class _MyAppState extends State<MyApp> {
       return Future.value(true);
     }
   }
+
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   initNotification(context);
+  //   //getData();
+  // }
 
   @override
   Widget build(BuildContext context) {

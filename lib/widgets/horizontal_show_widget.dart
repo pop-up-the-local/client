@@ -1,6 +1,8 @@
 // this is widget for horizontal show of the items
 
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:pop_up_the_local/notify/notification.dart';
 import 'package:pop_up_the_local/screens/pop_up_detailed_screen.dart';
 import '../services/pop_up_list_service.dart';
 import '../style/theme.dart';
@@ -43,14 +45,15 @@ class _HorizontalShowState extends State<HorizontalShow> {
               InkWell(
                 // 팝업 클릭 시 이동
                 onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => PopUpDetailedScreen(
-                        popupId: popup.popup_id,
-                      ),
-                    ),
-                  );
+                  // Navigator.push(
+                  //   context,
+                  //   MaterialPageRoute(
+                  //     builder: (context) => PopUpDetailedScreen(
+                  //       popupId: popup.popup_id,
+                  //     ),
+                  //   ),
+                  // );
+                  //showNotification();
                 },
                 child: Column(
                   children: [
