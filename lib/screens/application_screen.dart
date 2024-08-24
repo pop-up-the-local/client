@@ -303,41 +303,47 @@ class _ApplicationScreenState extends State<ApplicationScreen> {
                           child: const Text('사진 선택'),
                         ),
                         ElevatedButton(
-                          onPressed: () => _submitData(),
+                          onPressed: () {
+                            _submitData();
+                            // 이전 화면으로 이동
+                            Navigator.pop(context);
+                          },
                           child: const Text('제출하기'),
                         ),
                       ]),
                   const SizedBox(height: 20),
                   // recommendation이 null이 아닐 때만 Container 표시
-                  Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.all(20),
-                    decoration: BoxDecoration(
-                      color: ColorTheme.background,
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: SingleChildScrollView(
-                      primary: false,
-                      controller: ScrollController(),
-                      physics: const AlwaysScrollableScrollPhysics(),
-                      scrollDirection: Axis.vertical,
-                      child: Container(
-                        width: double.infinity,
-                        height: 400,
-                        decoration: BoxDecoration(
-                          color: ColorTheme.background,
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        child: Text(
-                          recommendation ?? 'default',
-                          style: const TextStyle(
-                              color: Color.fromARGB(255, 0, 0, 0),
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold),
+                  if (recommendation != null)
+                    Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.all(20),
+                      decoration: BoxDecoration(
+                        color: ColorTheme.background,
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: SingleChildScrollView(
+                        primary: false,
+                        controller: ScrollController(),
+                        physics: const AlwaysScrollableScrollPhysics(),
+                        scrollDirection: Axis.vertical,
+                        child: Container(
+                          width: double.infinity,
+                          height: 400,
+                          decoration: BoxDecoration(
+                            color: ColorTheme.background,
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Text(
+                            recommendation ?? 'default',
+                            style: const TextStyle(
+                                color: Color.fromARGB(255, 0, 0, 0),
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold),
+                          ),
                         ),
                       ),
                     ),
-                  ),
+
                   const SizedBox(height: 20),
                   const SizedBox(height: 20),
                 ],
