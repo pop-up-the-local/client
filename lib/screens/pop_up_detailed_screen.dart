@@ -30,8 +30,8 @@ class _PopUpDetailedScreenState extends State<PopUpDetailedScreen> {
     var fetchedPopUp = await getPopupDetail(widget.popupId);
     setState(() {
       popUp = fetchedPopUp;
-      images = popUp['images'];
-      _isBookmarked = popUp['bookmark_id'] != null;
+      images = popUp['images'] ?? ['default'];
+      _isBookmarked = popUp['bookmark_id'] ?? false;
     });
   }
 
@@ -43,7 +43,7 @@ class _PopUpDetailedScreenState extends State<PopUpDetailedScreen> {
 
   void _toggleBookmark() {
     if (_isBookmarked) {
-      deleteBookmark(popUp['bookmark_id']);
+      deleteBookmark((popUp['bookmark_id']) ?? 'default');
     } else {
       createBookmark(popUp['popup_id']);
     }
@@ -98,7 +98,7 @@ class _PopUpDetailedScreenState extends State<PopUpDetailedScreen> {
                               Row(
                                 children: [
                                   Text(
-                                    popUp['title'],
+                                    popUp['title'] ?? 'default',
                                     style: Theme.of(context)
                                         .textTheme
                                         .headlineMedium,
@@ -174,7 +174,7 @@ class _PopUpDetailedScreenState extends State<PopUpDetailedScreen> {
                     ),
                   ),
                   child: Text(
-                    popUp['description'],
+                    popUp['description'] ?? 'default',
                     style: Theme.of(context).textTheme.bodyMedium,
                     //qwqwwqoverflow: TextOverflow.ellipsis,
                     maxLines: 50,

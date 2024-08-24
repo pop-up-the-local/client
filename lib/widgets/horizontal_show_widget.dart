@@ -62,6 +62,14 @@ class _HorizontalShowState extends State<HorizontalShow> {
                         height: 160,
                         margin: const EdgeInsets.all(10),
                         decoration: BoxDecoration(
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.3),
+                              spreadRadius: 4,
+                              blurRadius: 4,
+                              offset: const Offset(0, 3),
+                            ),
+                          ],
                           color: ColorTheme.background,
                           borderRadius: BorderRadius.circular(20),
                           image: DecorationImage(
@@ -71,7 +79,8 @@ class _HorizontalShowState extends State<HorizontalShow> {
                         )),
                     Text(
                       popup.title,
-                      style: Theme.of(context).textTheme.titleMedium, // 팝업 위치
+                      style: Theme.of(context).textTheme.titleMedium,
+                      overflow: TextOverflow.ellipsis, // 팝업 위치
                     ),
                     Text(popup.address,
                         style: Theme.of(context).textTheme.titleSmall), // 팝업 이름

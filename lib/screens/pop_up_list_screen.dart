@@ -113,7 +113,7 @@ class _PopUpListScreenState extends State<PopUpListScreen> {
             contentPadding: EdgeInsets.all(10),
             title: Text(
               popup.title,
-              style: Theme.of(context).textTheme.bodyLarge,
+              style: Theme.of(context).textTheme.titleLarge,
             ),
             subtitle: Text(
               popup.address,
@@ -123,7 +123,8 @@ class _PopUpListScreenState extends State<PopUpListScreen> {
               borderRadius: BorderRadius.circular(8.0),
               child: Image.network(
                 popup.image,
-                width: 80,
+                width: 90,
+                height: 200,
               ),
             ),
             onTap: () {

@@ -104,7 +104,7 @@ class _ApplicationScreenState extends State<ApplicationScreen> {
     });
   }
 
-  Future<List<String>> _getRecommendation() async {
+  Future<String> _getRecommendation() async {
     // 서버 URL 변경 필요
 
     Map<String, dynamic> requestBody = {
@@ -112,20 +112,27 @@ class _ApplicationScreenState extends State<ApplicationScreen> {
     };
 
     // 서버 요청 및 응답 처리
-    var response =
-        await http.post(Uri.parse('$apiUrl/api/application/recommendation'),
-            //headers: {"Content-Type": "application/json"},
-            body: jsonEncode(requestBody));
+    var response = await http.post(
+        Uri.parse('$apiUrl/api/application/recommendation'),
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode(requestBody));
 
     if (response.statusCode == 200) {
+      // JSON 파싱
+      var data = jsonDecode(utf8.decode(response.bodyBytes));
+      // content 값을 List<String>으로 변환하여 반환
+      List<dynamic> contents = data['data']['content'];
+      List<String> contentList =
+          List<String>.from(contents.map((item) => item.toString()));
       //print((jsonDecode(utf8.decode(response.bodyBytes))['data']));
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text('추천 성공!')));
-      return jsonDecode(utf8.decode(response.bodyBytes))['data']['content'];
+      print(jsonDecode(utf8.decode(response.bodyBytes))['data']['content']);
+      return contentList.toString();
     } else {
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text('추천 실패!')));
-      return [];
+      return '추천 실패!';
     }
   }
 
@@ -191,10 +198,10 @@ class _ApplicationScreenState extends State<ApplicationScreen> {
     }
   }
 
+  String? recommendation;
+
   @override
   Widget build(BuildContext context) {
-    List<dynamic> recommendation = [];
-
     return Scaffold(
       body: Column(
         children: [
@@ -261,10 +268,6 @@ class _ApplicationScreenState extends State<ApplicationScreen> {
                       hintText: '가게 이름을 입력해주세요',
                       controller: _storeNameController,
                       onTextChanged: _updateProgress),
-                  // const TextInputWidget(
-                  //     title: '팝업 장소', hintText: '팝업 장소를 선택해주세요'),
-                  // const TextInputWidget(
-                  //     title: '카테고리', hintText: '카테고리를 선택해주세요'),
                   TextInputWidget(
                       title: '내용',
                       hintText: '내용을 입력해주세요',
@@ -276,10 +279,11 @@ class _ApplicationScreenState extends State<ApplicationScreen> {
                   ElevatedButton(
                     onPressed: () async {
                       var data = await _getRecommendation();
-                      print(data);
-                      setState(() {
-                        recommendation = data;
-                      });
+                      setState(() => recommendation = data);
+                      // recommendation의 첫 글자, 마지막 글자 제거
+                      recommendation = recommendation!
+                          .substring(1, recommendation!.length - 1);
+                      recommendation = '[ChatGPT의 추천 한마디!]\n${recommendation!}';
                     },
                     child: const Text('팝업 이벤트 추천'),
                   ),
@@ -304,20 +308,36 @@ class _ApplicationScreenState extends State<ApplicationScreen> {
                         ),
                       ]),
                   const SizedBox(height: 20),
-                  if (recommendation.isNotEmpty)
-                    // 넓은 textfield 생성
-                    Container(
-                      width: double.infinity,
-                      padding: const EdgeInsets.all(20),
-                      decoration: BoxDecoration(
-                        color: ColorTheme.background,
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: Text(
-                        recommendation[0],
-                        style: Theme.of(context).textTheme.bodyLarge,
+                  // recommendation이 null이 아닐 때만 Container 표시
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(20),
+                    decoration: BoxDecoration(
+                      color: ColorTheme.background,
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: SingleChildScrollView(
+                      primary: false,
+                      controller: ScrollController(),
+                      physics: const AlwaysScrollableScrollPhysics(),
+                      scrollDirection: Axis.vertical,
+                      child: Container(
+                        width: double.infinity,
+                        height: 400,
+                        decoration: BoxDecoration(
+                          color: ColorTheme.background,
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: Text(
+                          recommendation ?? 'default',
+                          style: const TextStyle(
+                              color: Color.fromARGB(255, 0, 0, 0),
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold),
+                        ),
                       ),
                     ),
+                  ),
                   const SizedBox(height: 20),
                   const SizedBox(height: 20),
                 ],
