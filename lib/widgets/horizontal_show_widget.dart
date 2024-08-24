@@ -43,16 +43,15 @@ class _HorizontalShowState extends State<HorizontalShow> {
           return Column(
             children: [
               InkWell(
-                // 팝업 클릭 시 이동
                 onTap: () {
-                  // Navigator.push(
-                  //   context,
-                  //   MaterialPageRoute(
-                  //     builder: (context) => PopUpDetailedScreen(
-                  //       popupId: popup.popup_id,
-                  //     ),
-                  //   ),
-                  // );
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => PopUpDetailedScreen(
+                        popupId: popup.popup_id,
+                      ),
+                    ),
+                  );
                   showNotification();
                 },
                 child: Column(
