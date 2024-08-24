@@ -62,12 +62,13 @@ class _MyAppState extends State<MyApp> {
     }
   }
 
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   initNotification(context);
-  //   //getData();
-  // }
+  @override
+  void initState() {
+    super.initState();
+    initNotification(context);
+    showNotification();
+    //getData();
+  }
 
   @override
   Widget build(BuildContext context) {

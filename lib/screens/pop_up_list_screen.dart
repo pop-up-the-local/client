@@ -55,7 +55,6 @@ class _PopUpListScreenState extends State<PopUpListScreen> {
     setState(() {
       _popupList = fetchedPopUps;
       _buildPopUpList();
-      print(_popupList);
     });
   }
 

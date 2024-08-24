@@ -104,6 +104,31 @@ class _ApplicationScreenState extends State<ApplicationScreen> {
     });
   }
 
+  Future<List<String>> _getRecommendation() async {
+    // 서버 URL 변경 필요
+
+    Map<String, dynamic> requestBody = {
+      "description": _descriptionController.text,
+    };
+
+    // 서버 요청 및 응답 처리
+    var response =
+        await http.post(Uri.parse('$apiUrl/api/application/recommendation'),
+            //headers: {"Content-Type": "application/json"},
+            body: jsonEncode(requestBody));
+
+    if (response.statusCode == 200) {
+      //print((jsonDecode(utf8.decode(response.bodyBytes))['data']));
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text('추천 성공!')));
+      return jsonDecode(utf8.decode(response.bodyBytes))['data']['content'];
+    } else {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text('추천 실패!')));
+      return [];
+    }
+  }
+
   Future<void> _uploadImages() async {
     var uri = Uri.parse('YOUR_BACKEND_URL'); // 서버 URL
     var request = http.MultipartRequest('POST', uri);
@@ -160,18 +185,16 @@ class _ApplicationScreenState extends State<ApplicationScreen> {
     print(response.statusCode);
     if (response.statusCode == 200) {
       print('Submitted successfully!');
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text('제출 성공!')));
     } else {
       print(response.statusCode);
       print('Submit failed!');
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text('제출 실패!')));
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    List<dynamic> recommendation = [];
+
     return Scaffold(
       body: Column(
         children: [
@@ -214,7 +237,6 @@ class _ApplicationScreenState extends State<ApplicationScreen> {
                         categories: _industries,
                         selectedValue: _selectedIndustry,
                         onChanged: (String? newValue) {
-                          print(newValue);
                           setState(() {
                             _selectedIndustry = newValue!;
                             _updateProgress();
@@ -226,8 +248,6 @@ class _ApplicationScreenState extends State<ApplicationScreen> {
                         categories: _locations,
                         selectedValue: _selectedLocation,
                         onChanged: (String? newValue) {
-                          print(newValue);
-
                           setState(() {
                             _selectedLocation = newValue!;
                             _updateProgress();
@@ -253,10 +273,15 @@ class _ApplicationScreenState extends State<ApplicationScreen> {
                   const SizedBox(height: 20),
                   buildCalendar(),
                   const SizedBox(height: 20),
-
                   ElevatedButton(
-                    onPressed: _pickImages,
-                    child: const Text('사진 선택'),
+                    onPressed: () async {
+                      var data = await _getRecommendation();
+                      print(data);
+                      setState(() {
+                        recommendation = data;
+                      });
+                    },
+                    child: const Text('팝업 이벤트 추천'),
                   ),
                   if (_selectedImages != null)
                     Wrap(
@@ -266,15 +291,33 @@ class _ApplicationScreenState extends State<ApplicationScreen> {
                       }).toList(),
                     ),
                   const SizedBox(height: 20),
-                  ElevatedButton(
-                    onPressed: _uploadImages,
-                    child: const Text('사진 업로드'),
-                  ),
-                  ElevatedButton(
-                    onPressed: () => _submitData(),
-                    child: const Text('제출하기'),
-                  ),
+                  Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        ElevatedButton(
+                          onPressed: _pickImages,
+                          child: const Text('사진 선택'),
+                        ),
+                        ElevatedButton(
+                          onPressed: () => _submitData(),
+                          child: const Text('제출하기'),
+                        ),
+                      ]),
                   const SizedBox(height: 20),
+                  if (recommendation.isNotEmpty)
+                    // 넓은 textfield 생성
+                    Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.all(20),
+                      decoration: BoxDecoration(
+                        color: ColorTheme.background,
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Text(
+                        recommendation[0],
+                        style: Theme.of(context).textTheme.bodyLarge,
+                      ),
+                    ),
                   const SizedBox(height: 20),
                   const SizedBox(height: 20),
                 ],
